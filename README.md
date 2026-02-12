@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌍 Remote Workforce Time Visualizer — POC
 
-## Getting Started
+## Overview
 
-First, run the development server:
+This project is a Proof of Concept web application designed for companies that embrace remote work.  
+Its purpose is to help teams visualize when collaborators are working across time zones in order to better schedule meetings, calls, and collaborative sessions.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+The application displays a world globe showing where team members are located.  
+Users can select a time range and instantly see which collaborators are available based on working hours, timezone, role, and availability status.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This project is strictly a frontend POC using static in-app data.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Goal
 
-## Learn More
+The main objective is to provide a clear and visual way to identify optimal collaboration windows across distributed teams.
 
-To learn more about Next.js, take a look at the following resources:
+The application helps answer questions such as:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Who is working during a specific time window?
+- Where are available collaborators located?
+- Which roles are currently reachable?
+- When is the best time to organize a meeting?
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+This project is intended as a technical and UI demonstration rather than a production-ready tool.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Tech Stack
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Framework:** Next.js (App Router)
+- **Styling:** TailwindCSS
+- **UI Components:** shadcn/ui
+- **Data:** Static hardcoded data (POC only)
+
+---
+
+## Core Features
+
+### 🌐 Globe Visualization
+- Interactive world globe displaying collaborators
+- Visual markers representing each person’s location
+- Highlighting of matching users based on filters
+- Clear visual distribution of the remote workforce
+
+### ⏱ Time Range Selection
+- User selects a custom time range
+- Automatic timezone handling
+- Identification of collaborators working within that range
+
+### 👥 Filtering System
+Users can filter collaborators based on:
+- Role within the company
+- Working hours
+
+### ✨ Highlighting Matching Users
+Collaborators matching:
+- Selected time range  
+- Availability  
+- Selected filters  
+
+…are visually emphasized on the globe and within a list.
+
+---
+
+## Userning Principles
+
+- Clarity over complexity
+- Strong visual feedback
+- Fast filtering and instant results
+- Clean and modern UI
+- Focus on usability for distributed teams
+
+---
+
+## Possible Future Evolution
+
+- Real database integration
+- Authentication and company workspaces
+- Calendar integrations (Google / Outlook)
+- Slack / Teams integrations
+
+---
+
+## Purpose of the Project
+
+This project demonstrates how modern web technologies can help distributed teams better understand availability across time zones through clear and interactive visualization.
+
+It is designed as a technical showcase and exploration of remote collaboration tooling.
+
