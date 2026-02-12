@@ -11,16 +11,24 @@ import {
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { EditUsersDialog } from "@/components/edit-users-dialog"
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from "@/components/ui/item"
 import type { User } from "@/lib/users"
 import {
   CalendarIcon,
+  EyeIcon,
   MoonIcon,
   SunIcon,
   UsersIcon,
@@ -30,14 +38,17 @@ type AppSidebarProps = {
   users: User[]
   meetingPanelOpen: boolean
   onMeetingPanelToggle: () => void
+  onHighlightUser?: (user: User) => void
+  onUserUpdate?: (user: User) => void
 }
 
 export function AppSidebar({
   users,
   meetingPanelOpen,
   onMeetingPanelToggle,
+  onHighlightUser,
+  onUserUpdate,
 }: AppSidebarProps) {
-  const [editUsersOpen, setEditUsersOpen] = React.useState(false)
   const { theme, setTheme } = useTheme()
 
   const cycleTheme = () => {
@@ -57,51 +68,37 @@ export function AppSidebar({
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm">RemoteTime</CardTitle>
           <div className="flex items-center gap-1">
-            <Button
-              variant="ghost"
-              size="icon-xs"
-              onClick={cycleTheme}
-              aria-label="Toggle theme"
-            >
-              <ThemeIcon className="size-4" />
-            </Button>
-            <Dialog open={editUsersOpen} onOpenChange={setEditUsersOpen}>
-              <DialogTrigger asChild>
+            <Tooltip>
+              <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
                   size="icon-xs"
-                  aria-label="Edit users"
+                  onClick={cycleTheme}
+                  aria-label="Toggle theme"
                 >
-                  <UsersIcon className="size-4" />
+                  <ThemeIcon className="size-4" />
                 </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                  <DialogTitle>Edit users</DialogTitle>
-                </DialogHeader>
-                <p className="text-muted-foreground text-xs">
-                  This feature will be available soon.
-                  You will be able to add, edit or remove collaborators.
-                </p>
-              </DialogContent>
-            </Dialog>
+              </TooltipTrigger>
+              <TooltipContent>Toggle theme</TooltipContent>
+            </Tooltip>
+            <EditUsersDialog users={users} onUserUpdate={onUserUpdate} />
           </div>
         </CardHeader>
         <CardContent className="flex flex-1 flex-col gap-3 overflow-hidden">
           <div className="flex-1 overflow-auto space-y-2 text-xs text-muted-foreground">
             {users.map((user) => (
-              <div
+              <Item
                 key={user.id}
-                className="flex items-center gap-2 rounded-md border border-border/60 bg-muted/40 px-2 py-1.5"
+                className="group flex items-center gap-2 border border-border/60 bg-muted/40 px-2 py-1.5"
               >
-                <div className="h-7 w-7 shrink-0 overflow-hidden rounded-full bg-muted">
+                <ItemMedia variant={"image"} className="h-7 w-7 shrink-0 overflow-hidden rounded-full bg-muted">
                   <img
                     src={user.avatarUrl}
                     alt={`${user.firstName} ${user.lastName}`}
                     className="h-full w-full object-cover"
                   />
-                </div>
-                <div className="flex flex-col gap-0.5">
+                </ItemMedia>
+                <div className="flex flex-1 min-w-0 flex-col gap-0.5">
                   <span className="text-sm font-medium text-foreground leading-tight">
                     {user.firstName} {user.lastName}
                   </span>
@@ -112,7 +109,23 @@ export function AppSidebar({
                     {user.role}
                   </Badge>
                 </div>
-              </div>
+                {onHighlightUser && (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon-xs"
+                        className="shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
+                        onClick={() => onHighlightUser(user)}
+                        aria-label={`Focus on ${user.firstName} ${user.lastName} on map`}
+                      >
+                        <EyeIcon className="size-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Focus on map</TooltipContent>
+                  </Tooltip>
+                )}
+              </Item>
             ))}
           </div>
         </CardContent>
