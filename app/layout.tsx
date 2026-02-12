@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Remote Workforce Time Visualizer",
-  description: "A tool to visualize the remote workforce time",
+  title: "RemoteTime",
+  description: "A tool to visualize the remote workforce time.",
 };
 
 export default function RootLayout({
