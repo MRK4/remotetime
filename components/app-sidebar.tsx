@@ -62,11 +62,27 @@ export function AppSidebar({
       ? MoonIcon
       : SunIcon
 
+  const [utcTime, setUtcTime] = React.useState(() =>
+    new Date().toISOString().slice(11, 19)
+  )
+  React.useEffect(() => {
+    const t = setInterval(
+      () => setUtcTime(new Date().toISOString().slice(11, 19)),
+      1000
+    )
+    return () => clearInterval(t)
+  }, [])
+
   return (
     <div className="pointer-events-auto absolute left-4 top-4 bottom-4 z-10 flex w-80 max-w-full">
       <Card className="flex h-full w-full flex-col border border-border/60 bg-background/95 shadow-lg backdrop-blur">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm">RemoteTime</CardTitle>
+          <div className="flex flex-col gap-0.5">
+            <CardTitle className="text-sm">RemoteTime</CardTitle>
+            <span className="text-xs text-muted-foreground font-mono">
+              UTC {utcTime}
+            </span>
+          </div>
           <div className="flex items-center gap-1">
             <Tooltip>
               <TooltipTrigger asChild>

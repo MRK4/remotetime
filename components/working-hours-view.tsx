@@ -2,30 +2,10 @@
 
 import * as React from "react"
 import type { User } from "@/lib/users"
+import type { TimeSlot } from "@/lib/working-hours"
+import { localToUtcHours } from "@/lib/working-hours"
 import { cn } from "@/lib/utils"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Button } from "@/components/ui/button"
-
-/** Décalage horaire approximatif en heures (UTC+) pour le fuseau donné */
-function getTimezoneOffsetHours(tz: string): number {
-  const date = new Date()
-  const utc = new Date(
-    date.toLocaleString("en-US", { timeZone: "UTC" })
-  ).getTime()
-  const tzDate = new Date(
-    date.toLocaleString("en-US", { timeZone: tz })
-  ).getTime()
-  return (tzDate - utc) / (1000 * 60 * 60)
-}
-
-/** Convertit heure locale (0-24) en position UTC (0-24) pour l'affichage */
-function localToUtcHours(
-  localHour: number,
-  tz: string
-): number {
-  const offset = getTimezoneOffsetHours(tz)
-  return (localHour - offset + 24) % 24
-}
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i)
 
@@ -33,14 +13,16 @@ type WorkingHoursViewProps = {
   users: User[]
   invitedIds?: Set<string>
   onInvitedChange?: (userId: string, invited: boolean) => void
+  /** Créneau optimal pour une réunion (affiché en surbrillance) */
+  bestSlot?: TimeSlot | null
 }
 
 export function WorkingHoursView({
   users,
   invitedIds,
   onInvitedChange,
+  bestSlot,
 }: WorkingHoursViewProps) {
-  const refTz = "Europe/Paris"
   const [localInvited, setLocalInvited] = React.useState<Set<string>>(
     () => invitedIds ?? new Set(users.map((u) => u.id))
   )
@@ -56,32 +38,45 @@ export function WorkingHoursView({
         })
       }
 
-  const allSelected = users.length > 0 && users.every((u) => invited.has(u.id))
-  const toggleAll = () => {
-    if (allSelected) {
-      users.forEach((u) => setInvited(u.id, false))
-    } else {
-      users.forEach((u) => setInvited(u.id, true))
-    }
-  }
+  const [utcPercent, setUtcPercent] = React.useState(() => {
+    const now = new Date()
+    const h = now.getUTCHours()
+    const m = now.getUTCMinutes()
+    const s = now.getUTCSeconds()
+    return ((h + m / 60 + s / 3600) / 24) * 100
+  })
+  React.useEffect(() => {
+    const t = setInterval(() => {
+      const now = new Date()
+      const h = now.getUTCHours()
+      const m = now.getUTCMinutes()
+      const s = now.getUTCSeconds()
+      setUtcPercent(((h + m / 60 + s / 3600) / 24) * 100)
+    }, 1000)
+    return () => clearInterval(t)
+  }, [])
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex items-center justify-between gap-2">
-        <span className="text-muted-foreground text-xs">
-          Times converted to {refTz.replace("_", " ")}
-        </span>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="h-7 text-xs"
-          onClick={toggleAll}
-        >
-          {allSelected ? "Deselect all" : "Select all"}
-        </Button>
-      </div>
       <div className="overflow-x-auto">
-        <div className="min-w-[480px]">
+        <div className="relative min-w-[720px]">
+          {bestSlot && (
+            <div
+              aria-hidden="true"
+              className="absolute top-0 bottom-0 pointer-events-none z-0 bg-primary/20 border border-primary/40"
+              style={{
+                left: `calc(7rem + (100% - 7rem) * ${bestSlot.start / 24})`,
+                width: `calc((100% - 7rem) * ${(bestSlot.end - bestSlot.start) / 24})`,
+              }}
+            />
+          )}
+          <div
+            aria-hidden="true"
+            className="absolute top-0 h-full w-0.5 bg-primary pointer-events-none z-10"
+            style={{
+              left: `calc(7rem + (100% - 7rem) * ${utcPercent / 100})`,
+            }}
+          />
           {/* En-tête des heures */}
           <div className="mb-1 flex text-[10px] text-muted-foreground">
             <div className="w-28 shrink-0" />
@@ -90,7 +85,7 @@ export function WorkingHoursView({
                 <div
                   key={h}
                   className="flex-1 text-center"
-                  style={{ minWidth: 16 }}
+                  style={{ minWidth: 24 }}
                 >
                   {h}h
                 </div>
@@ -111,7 +106,7 @@ export function WorkingHoursView({
               <div
                 key={user.id}
                 className={cn(
-                  "flex items-center gap-2 rounded-md py-1.5 pl-2 pr-1 -mx-1 transition-colors",
+                  "flex items-center gap-2 py-1.5 pl-2 pr-1 mx-1 transition-colors",
                   isInvited
                     ? "bg-primary/10 ring-1 ring-primary/20"
                     : "opacity-60"
@@ -136,10 +131,10 @@ export function WorkingHoursView({
                     {user.firstName} {user.lastName[0]}.
                   </span>
                 </div>
-                <div className="relative flex flex-1 h-6 bg-muted/30 rounded overflow-hidden">
+                <div className="relative flex flex-1 h-6 bg-muted/30 overflow-hidden">
                   <div
                     className={cn(
-                      "absolute inset-y-0 rounded bg-primary/60",
+                      "absolute inset-y-0 bg-primary/60",
                       "transition-all duration-200"
                     )}
                     style={{
