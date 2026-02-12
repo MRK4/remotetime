@@ -69,7 +69,7 @@ export function WorkingHoursView({
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between gap-2">
         <span className="text-muted-foreground text-xs">
-          Horaires convertis en {refTz.replace("_", " ")}
+          Times converted to {refTz.replace("_", " ")}
         </span>
         <Button
           variant="ghost"
@@ -77,7 +77,7 @@ export function WorkingHoursView({
           className="h-7 text-xs"
           onClick={toggleAll}
         >
-          {allSelected ? "Tout désélectionner" : "Tout sélectionner"}
+          {allSelected ? "Deselect all" : "Select all"}
         </Button>
       </div>
       <div className="overflow-x-auto">
@@ -123,7 +123,7 @@ export function WorkingHoursView({
                     onCheckedChange={(checked) =>
                       setInvited(user.id, checked === true)
                     }
-                    aria-label={`Inviter ${user.firstName} ${user.lastName}`}
+                    aria-label={`Invite ${user.firstName} ${user.lastName}`}
                   />
                   <div className="h-6 w-6 shrink-0 overflow-hidden rounded-full bg-muted">
                     <img

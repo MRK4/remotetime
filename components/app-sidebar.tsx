@@ -61,7 +61,7 @@ export function AppSidebar({
               variant="ghost"
               size="icon-xs"
               onClick={cycleTheme}
-              aria-label="Changer le thème"
+              aria-label="Toggle theme"
             >
               <ThemeIcon className="size-4" />
             </Button>
@@ -70,19 +70,18 @@ export function AppSidebar({
                 <Button
                   variant="ghost"
                   size="icon-xs"
-                  aria-label="Modifier les utilisateurs"
+                  aria-label="Edit users"
                 >
                   <UsersIcon className="size-4" />
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-md">
                 <DialogHeader>
-                  <DialogTitle>Modifier les utilisateurs</DialogTitle>
+                  <DialogTitle>Edit users</DialogTitle>
                 </DialogHeader>
                 <p className="text-muted-foreground text-xs">
-                  Cette fonctionnalité sera disponible prochainement.
-                  Vous pourrez ajouter, modifier ou supprimer des
-                  collaborateurs.
+                  This feature will be available soon.
+                  You will be able to add, edit or remove collaborators.
                 </p>
               </DialogContent>
             </Dialog>
@@ -125,7 +124,7 @@ export function AppSidebar({
             onClick={onMeetingPanelToggle}
           >
             <CalendarIcon className="size-4" />
-            Planifier une réunion
+            Schedule a meeting
           </Button>
         </CardFooter>
       </Card>

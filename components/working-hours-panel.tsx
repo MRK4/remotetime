@@ -21,16 +21,16 @@ export function WorkingHoursPanel({
 
   return (
     <div
-      className="pointer-events-auto absolute bottom-4 left-[calc(1rem+20rem+1rem)] right-16 z-10 max-h-[70vh]"
+      className="pointer-events-auto absolute bottom-4 left-[calc(1rem+20rem+1rem)] right-14 z-10 max-h-[70vh]"
     >
       <Card className="flex h-full w-full flex-col border border-border/60 bg-background/95 shadow-lg backdrop-blur">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm">Horaires de travail</CardTitle>
+          <CardTitle className="text-sm">Working hours</CardTitle>
           <Button
             variant="ghost"
             size="icon-xs"
             onClick={onClose}
-            aria-label="Fermer"
+            aria-label="Close"
           >
             <XIcon className="size-4" />
           </Button>
