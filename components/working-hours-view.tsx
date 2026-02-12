@@ -15,6 +15,8 @@ type WorkingHoursViewProps = {
   onInvitedChange?: (userId: string, invited: boolean) => void
   /** Créneau optimal pour une réunion (affiché en surbrillance) */
   bestSlot?: TimeSlot | null
+  /** Appelé quand l'utilisateur clique sur une colonne d'heure (0–23 UTC) */
+  onHourClick?: (hour: number) => void
 }
 
 export function WorkingHoursView({
@@ -22,6 +24,7 @@ export function WorkingHoursView({
   invitedIds,
   onInvitedChange,
   bestSlot,
+  onHourClick,
 }: WorkingHoursViewProps) {
   const [localInvited, setLocalInvited] = React.useState<Set<string>>(
     () => invitedIds ?? new Set(users.map((u) => u.id))
@@ -77,6 +80,20 @@ export function WorkingHoursView({
               left: `calc(7rem + (100% - 7rem) * ${utcPercent / 100})`,
             }}
           />
+          {onHourClick &&
+            HOURS.map((h) => (
+              <button
+                key={h}
+                type="button"
+                className="absolute top-0 bottom-0 z-[5] cursor-pointer transition-colors hover:bg-primary/5"
+                style={{
+                  left: `calc(7rem + (100% - 7rem) * ${h / 24})`,
+                  width: `calc((100% - 7rem) / 24)`,
+                }}
+                onClick={() => onHourClick(h)}
+                aria-label={`Créer une réunion à ${h}h UTC`}
+              />
+            ))}
           {/* En-tête des heures */}
           <div className="mb-1 flex text-[10px] text-muted-foreground">
             <div className="w-28 shrink-0" />

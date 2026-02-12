@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { toast } from "sonner"
 import { XIcon } from "lucide-react"
 
 type WorkingHoursPanelProps = {
@@ -67,23 +68,22 @@ export function WorkingHoursPanel({
       <Card className="flex h-full w-full flex-col border border-border/60 bg-background/95 shadow-lg backdrop-blur">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm">Working hours</CardTitle>
-          <CardDescription>
-            Times in UTC
-          </CardDescription>
           {invitedUsers.length > 0 && (
-            <Badge
-              variant="outline"
-              className="mt-1 w-fit bg-primary/20 border-primary/40 text-foreground"
-            >
-              {bestSlot ? (
-                <>
-                  Meilleur créneau : {bestSlot.start}h–{bestSlot.end}h UTC (
-                  {bestSlot.end - bestSlot.start}h)
-                </>
-              ) : (
-                "Aucun créneau commun pour les personnes sélectionnées."
-              )}
-            </Badge>
+            <CardDescription>
+              <Badge
+                variant="outline"
+                className="w-fit bg-primary/20 border-primary/40 text-foreground"
+              >
+                {bestSlot ? (
+                  <>
+                    Best slot : {bestSlot.start}h–{bestSlot.end}h UTC (
+                    {bestSlot.end - bestSlot.start}h)
+                  </>
+                ) : (
+                  "No common time slot for the selected people."
+                )}
+              </Badge>
+            </CardDescription>
           )}
           <CardAction className="flex items-center gap-1">
             <Button
@@ -109,6 +109,11 @@ export function WorkingHoursPanel({
             users={users}
             invitedIds={invitedIds}
             bestSlot={bestSlot}
+            onHourClick={(hour) =>
+              toast(`Meeting at ${hour}h UTC`, {
+                description: "This is a simulation, as the feature is not available yet.",
+              })
+            }
             onInvitedChange={(userId, invited) => {
               setInvitedIds((prev) => {
                 const next = new Set(prev)

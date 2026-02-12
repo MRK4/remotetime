@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 import { UserMap } from "@/components/user-map";
 import { AppSidebar } from "@/components/app-sidebar";
 import { WorkingHoursPanel } from "@/components/working-hours-panel";
@@ -12,6 +13,25 @@ export default function Page() {
   const [users, setUsers] = useState<User[]>(USERS);
   const [meetingPanelOpen, setMeetingPanelOpen] = useState(false);
   const mapRef = useRef<MapRef>(null);
+
+  useEffect(() => {
+    const timer = setTimeout(
+      () =>
+        toast("Thanks for using RemoteTime!", {
+          description:
+            "All data is static and for demonstration purposes. Check the repository for more information.",
+          action: {
+            label: "GitHub",
+            onClick: () => {
+              window.open("https://github.com/MRK4/remotetime", "_blank");
+            },
+          },
+          duration: 8000,
+        }),
+      100
+    );
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleHighlightUser = (user: User) => {
     mapRef.current?.flyTo({

@@ -43,6 +43,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import type { User } from "@/lib/users"
+import { toast } from "sonner"
 import { ArrowLeftIcon, Frown, Loader2, UsersIcon } from "lucide-react"
 
 const NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
@@ -186,6 +187,9 @@ export function EditUsersDialog({ users, onUserUpdate }: EditUsersDialogProps) {
       workingHours: editForm.workingHours ?? selectedUser.workingHours,
     }
     onUserUpdate(updated)
+    toast.success(
+      `${updated.firstName} ${updated.lastName} has been updated.`
+    )
     closeEditView()
   }
 
