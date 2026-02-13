@@ -80,23 +80,9 @@ export function WorkingHoursView({
               left: `calc(7rem + (100% - 7rem) * ${utcPercent / 100})`,
             }}
           />
-          {onHourClick &&
-            HOURS.map((h) => (
-              <button
-                key={h}
-                type="button"
-                className="absolute top-0 bottom-0 z-[5] cursor-pointer transition-colors hover:bg-primary/5"
-                style={{
-                  left: `calc(7rem + (100% - 7rem) * ${h / 24})`,
-                  width: `calc((100% - 7rem) / 24)`,
-                }}
-                onClick={() => onHourClick(h)}
-                aria-label={`Créer une réunion à ${h}h UTC`}
-              />
-            ))}
           {/* En-tête des heures */}
           <div className="mb-1 flex text-[10px] text-muted-foreground">
-            <div className="w-28 shrink-0" />
+            <div className="sticky left-0 z-10 w-28 shrink-0 border-r border-border/60 bg-card" />
             <div className="flex flex-1">
               {HOURS.map((h) => (
                 <div
@@ -129,7 +115,12 @@ export function WorkingHoursView({
                     : "opacity-60"
                 )}
               >
-                <div className="flex w-28 shrink-0 items-center gap-2">
+                <div
+                  className={cn(
+                    "sticky left-0 z-10 flex w-28 shrink-0 items-center gap-2 border-r border-border/60",
+                    "bg-card"
+                  )}
+                >
                   <Checkbox
                     checked={invited.has(user.id)}
                     onCheckedChange={(checked) =>
@@ -163,6 +154,20 @@ export function WorkingHoursView({
               </div>
             )
           })}
+          {onHourClick &&
+            HOURS.map((h) => (
+              <button
+                key={h}
+                type="button"
+                className="absolute top-0 bottom-0 z-30 cursor-pointer touch-manipulation transition-colors hover:bg-primary/5"
+                style={{
+                  left: `calc(7rem + (100% - 7rem) * ${h / 24})`,
+                  width: `calc((100% - 7rem) / 24)`,
+                }}
+                onClick={() => onHourClick(h)}
+                aria-label={`Créer une réunion à ${h}h UTC`}
+              />
+            ))}
         </div>
       </div>
     </div>
